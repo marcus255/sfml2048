@@ -43,7 +43,6 @@ public:
 				squares[i][j].setPosition(blockOrigin);
 				numbers[i][j] = number;
 				numbers[i][j].setPosition(blockOrigin);
-
 			}
 	}
 
@@ -57,18 +56,6 @@ public:
 				return filled;
 			}
 		}
-	}
-
-	void moveUp(){
-		flipArray();
-		moveLeft();
-		flipArray();
-	}
-
-	void moveDown(){
-		flipArray();
-		moveRight();
-		flipArray();
 	}
 
 	void flipArray(){
@@ -92,6 +79,18 @@ public:
 		moveLeft();
 		for (auto& row : array)
 			std::reverse(std::begin(row), std::end(row));
+	}
+
+	void moveUp(){
+		flipArray();
+		moveLeft();
+		flipArray();
+	}
+
+	void moveDown(){
+		flipArray();
+		moveRight();
+		flipArray();
 	}
 
 	void shrinkVector(std::array<unsigned, size>& v){
@@ -161,64 +160,64 @@ int main()
 {
 	bool gameover = false;
 	srand (time(NULL));
-    sf::RenderWindow window(sf::VideoMode(g_size, g_size + b_size), "SFML 2048");
-    window.setFramerateLimit(10);
+	sf::RenderWindow window(sf::VideoMode(g_size, g_size + b_size), "SFML 2048");
+	window.setFramerateLimit(10);
 	Grid grid(window, b_size);
 	grid.addBlock();
 	grid.addBlock();
 	grid.update();
 	grid.draw();
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            switch (event.type)
-		    {
-		        case sf::Event::Closed:
-		            window.close();
-		            break;
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			switch (event.type)
+			{
+				case sf::Event::Closed:
+					window.close();
+					break;
 
-		        case sf::Event::KeyPressed:
-		            switch (event.key.code)
-		            {
-		            	case sf::Keyboard::Left:
-		            		grid.moveLeft();
-			            	break;
-		            	case sf::Keyboard::Right:
+				case sf::Event::KeyPressed:
+					switch (event.key.code)
+					{
+						case sf::Keyboard::Left:
+							grid.moveLeft();
+							break;
+						case sf::Keyboard::Right:
 							grid.moveRight();
-			            	break;
-		            	case sf::Keyboard::Up:
-			            	grid.moveUp();
-			            	break;
-		            	case sf::Keyboard::Down:
-		            		grid.moveDown();
-		            		break;
-		            	default:
-		            		break;
-		            }
-		            if (grid.moved)
-		            	grid.addBlock();
-		            grid.moved = false;
-		            grid.update();
-		            grid.draw();
-		            break;
-		        default:
-		            break;
-		    }
-		    if (grid.filled == size*size && !grid.isShrinkPossible()) {
-		    	gameover = true;
-		    	sf::Text end_str("GAME\nOVER", grid.font, g_size / 4);
-		        sf::FloatRect r = end_str.getLocalBounds();
-		        end_str.setColor(sf::Color::Red);
-		        end_str.setPosition((g_size - r.width) / 2, (g_size - r.height) / 2);
-		        window.draw(end_str);
-        		break;
-		    }
-        }
-        window.display();
-    }
+							break;
+						case sf::Keyboard::Up:
+							grid.moveUp();
+							break;
+						case sf::Keyboard::Down:
+							grid.moveDown();
+							break;
+						default:
+							break;
+					}
+					if (grid.moved)
+						grid.addBlock();
+					grid.moved = false;
+					grid.update();
+					grid.draw();
+					break;
+				default:
+					break;
+			}
+			if (grid.filled == size*size && !grid.isShrinkPossible()) {
+				gameover = true;
+				sf::Text end_str("GAME\nOVER", grid.font, g_size / 4);
+				sf::FloatRect r = end_str.getLocalBounds();
+				end_str.setColor(sf::Color::Red);
+				end_str.setPosition((g_size - r.width) / 2, (g_size - r.height) / 2);
+				window.draw(end_str);
+				break;
+			}
+		}
+		window.display();
+	}
 
-    return 0;
+	return 0;
 }
